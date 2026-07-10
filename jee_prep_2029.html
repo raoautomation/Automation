@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JEE 2029 Prep Companion</title>
+<style>
+  :root{
+    --bg:#0f1419; --panel:#161d27; --panel2:#1c2530; --border:#2a3441;
+    --text:#e8edf3; --muted:#8b98a8; --accent:#4f8ff7;
+    --physics:#3b82f6; --chem:#22c55e; --maths:#f59e0b;
+    --good:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);}
+  header{background:var(--panel);padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  header h1{font-size:18px;margin:0;font-weight:600;}
+  header .sub{color:var(--muted);font-size:12px;}
+  nav{display:flex;gap:4px;padding:10px 20px;background:var(--panel2);border-bottom:1px solid var(--border);flex-wrap:wrap;position:sticky;top:0;z-index:10;}
+  nav button{background:transparent;border:1px solid transparent;color:var(--muted);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;}
+  nav button.active{background:var(--accent);color:#fff;}
+  nav button:hover:not(.active){background:#22303f;color:var(--text);}
+  main{padding:20px;max-width:1100px;margin:0 auto;}
+  .tab{display:none;}
+  .tab.active{display:block;animation:fade .2s ease;}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:18px;}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+  .card h3{margin:0 0 6px;font-size:13px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.5px;}
+  .card .big{font-size:26px;font-weight:700;}
+  .card .small{font-size:12px;color:var(--muted);margin-top:4px;}
+  .section-title{font-size:16px;font-weight:600;margin:22px 0 10px;display:flex;align-items:center;gap:8px;}
+  .subject-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;color:#fff;}
+  .tag-Physics{background:var(--physics);} .tag-Chemistry{background:var(--chem);} .tag-Maths{background:var(--maths);}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+  th{color:var(--muted);font-weight:500;font-size:12px;text-transform:uppercase;}
+  input,select,textarea,button{font-family:inherit;font-size:13px;}
+  input[type=text],input[type=number],input[type=date],select,textarea{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:6px;width:100%;}
+  textarea{resize:vertical;min-height:50px;}
+  .btn{background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:600;}
+  .btn:hover{opacity:.9;}
+  .btn.secondary{background:var(--panel2);border:1px solid var(--border);color:var(--text);}
+  .btn.danger{background:var(--bad);}
+  .btn.small{padding:4px 9px;font-size:12px;}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:end;}
+  .row > div{flex:1;min-width:120px;}
+  .chapter-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+  .chapter-row .name{flex:1;font-size:13.5px;}
+  .status-pill{font-size:11px;padding:3px 9px;border-radius:12px;cursor:pointer;border:1px solid var(--border);background:var(--panel2);color:var(--muted);}
+  .status-pill.not-started{color:var(--muted);}
+  .status-pill.in-progress{color:var(--warn);border-color:var(--warn);}
+  .status-pill.done{color:var(--good);border-color:var(--good);}
+  .box-badge{font-size:11px;color:var(--muted);width:60px;text-align:center;}
+  .progress-bar{height:8px;background:var(--panel2);border-radius:5px;overflow:hidden;}
+  .progress-bar .fill{height:100%;background:var(--accent);}
+  .flashcard{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:30px;text-align:center;min-height:140px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;}
+  .flash-controls{display:flex;gap:8px;justify-content:center;margin-top:14px;}
+  .formula-item{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:10px;}
+  .formula-item .f{font-family:'Cambria Math',serif;font-size:15px;margin:6px 0;color:var(--accent);}
+  .empty{color:var(--muted);font-size:13px;padding:16px;text-align:center;}
+  .toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+  .tab-inner-nav{display:flex;gap:6px;margin-bottom:14px;}
+  .tab-inner-nav button{background:var(--panel2);border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;}
+  .tab-inner-nav button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+  canvas{max-width:100%;}
+  #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:100;}
+  #toast.show{opacity:1;}
+  .due-today{border-left:3px solid var(--warn);}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🎯 JEE 2029 Prep Companion</h1>
+    <div class="sub">Planner · Mock Tests · Formulas · Flashcards · Short Notes — fully offline</div>
+  </div>
+  <div class="sub" id="headerCountdown"></div>
+</header>
+
+<nav>
+  <button class="nav-btn active" data-tab="dashboard">Dashboard</button>
+  <button class="nav-btn" data-tab="planner">Planner</button>
+  <button class="nav-btn" data-tab="mocktests">Mock Tests</button>
+  <button class="nav-btn" data-tab="formulas">Formulas</button>
+  <button class="nav-btn" data-tab="flashcards">Flashcards</button>
+  <button class="nav-btn" data-tab="notes">Short Notes</button>
+  <button class="nav-btn" data-tab="data">Data</button>
+</nav>
+
+<main>
+
+  <!-- DASHBOARD -->
+  <div class="tab active" id="tab-dashboard">
+    <div class="card" id="dailyTipBox" style="margin-bottom:14px;border-left:3px solid var(--accent);"></div>
+    <div class="grid" id="dashCards"></div>
+    <div class="section-title">📈 Score Trend</div>
+    <div class="card"><canvas id="dashChart" height="140"></canvas></div>
+    <div class="section-title">⏰ Due Today</div>
+    <div class="card" id="dueTodayBox"></div>
+  </div>
+
+  <!-- PLANNER -->
+  <div class="tab" id="tab-planner">
+    <div class="section-title">🎯 Exam Target Dates</div>
+    <div class="card row">
+      <div><label>JEE Main 2029 Date<input type="date" id="mainDate"></label></div>
+      <div><label>JEE Advanced 2029 Date<input type="date" id="advDate"></label></div>
+      <div style="flex:0"><button class="btn" onclick="saveDates()">Save</button></div>
+    </div>
+
+    <div class="section-title">✅ Daily Tasks</div>
+    <div class="card">
+      <div class="row">
+        <div><input type="text" id="taskText" placeholder="e.g. Revise Rotational Motion"></div>
+        <div><input type="date" id="taskDate"></div>
+        <div style="flex:0"><button class="btn" onclick="addTask()">Add</button></div>
+      </div>
+      <div id="taskList" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="section-title">📚 Syllabus Tracker</div>
+    <div class="tab-inner-nav" id="planSubjectNav"></div>
+    <div class="card" id="syllabusBox"></div>
+  </div>
+
+  <!-- MOCK TESTS -->
+  <div class="tab" id="tab-mocktests">
+    <div class="section-title">➕ Add Mock Test</div>
+    <div class="card">
+      <div class="row">
+        <div><label>Date<input type="date" id="mtDate"></label></div>
+        <div><label>Exam Type
+          <select id="mtType"><option>JEE Main</option><option>JEE Advanced</option></select>
+        </label></div>
+      </div>
+      <div class="row" style="margin-top:10px;">
+        <div><label>Physics<input type="number" id="mtPhysics" placeholder="Marks"></label></div>
+        <div><label>Chemistry<input type="number" id="mtChem" placeholder="Marks"></label></div>
+        <div><label>Maths<input type="number" id="mtMaths" placeholder="Marks"></label></div>
+        <div><label>Max Marks<input type="number" id="mtMax" value="300"></label></div>
+      </div>
+      <div style="margin-top:10px;"><button class="btn" onclick="addMockTest()">Save Test</button></div>
+    </div>
+    <div class="section-title">📊 Test History</div>
+    <div class="card">
+      <table>
+        <thead><tr><th>Date</th><th>Type</th><th>Phy</th><th>Chem</th><th>Maths</th><th>Total</th><th>%</th><th></th></tr></thead>
+        <tbody id="mockTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FORMULAS -->
+  <div class="tab" id="tab-formulas">
+    <div class="toolbar">
+      <input type="text" id="formulaSearch" placeholder="🔍 Search formulas..." oninput="renderFormulas()">
+      <button class="btn secondary" onclick="showFormulaForm()">+ Add Formula</button>
+    </div>
+    <div class="card" id="formulaFormBox" style="display:none;margin-bottom:14px;"></div>
+    <div id="formulaList"></div>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div class="tab" id="tab-flashcards">
+    <div class="toolbar">
+      <button class="btn" onclick="showFlashForm()">+ New Card</button>
+      <button class="btn secondary" onclick="startReview()">▶ Start Review Session</button>
+    </div>
+    <div class="card" id="flashFormBox" style="display:none;margin-bottom:14px;"></div>
+    <div id="reviewBox"></div>
+    <div class="section-title">🗂 All Cards</div>
+    <div id="allCardsList"></div>
+  </div>
+
+  <!-- SHORT NOTES -->
+  <div class="tab" id="tab-notes">
+    <div class="toolbar">
+      <input type="text" id="noteSearch" placeholder="🔍 Search short notes..." oninput="renderNotes()">
+      <button class="btn secondary" onclick="showNoteForm()">+ Add Note</button>
+    </div>
+    <div class="card" id="noteFormBox" style="display:none;margin-bottom:14px;"></div>
+    <div class="tab-inner-nav" id="notesSubjectNav"></div>
+    <div id="notesList"></div>
+  </div>
+
+  <!-- DATA -->
+  <div class="tab" id="tab-data">
+    <div class="section-title">💾 Backup & Restore</div>
+    <div class="card">
+      <p style="color:var(--muted);font-size:13px;">All data is stored locally in this browser (localStorage). Export regularly to avoid data loss, and import to restore or transfer to another device.</p>
+      <div class="row">
+        <button class="btn" onclick="exportData()">⬇ Export JSON</button>
+        <button class="btn secondary" onclick="document.getElementById('importFile').click()">⬆ Import JSON</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="btn danger" onclick="resetAll()">⚠ Reset All Data</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast"></div>
+
+<script>
+/* ============ DATA MODEL ============ */
+const SUBJECTS = ['Physics','Chemistry','Maths'];
+const CHAPTER_SEED = {
+  Physics: ["Units & Measurements","Kinematics","Laws of Motion","Work, Energy & Power","Rotational Motion","Gravitation","Properties of Solids & Liquids","Thermodynamics","Kinetic Theory of Gases","Oscillations & Waves","Electrostatics","Current Electricity","Magnetic Effects of Current","Electromagnetic Induction & AC","Electromagnetic Waves","Ray & Wave Optics","Modern Physics","Semiconductor Electronics"],
+  Chemistry: ["Mole Concept","Atomic Structure","Chemical Bonding","States of Matter","Chemical Thermodynamics","Equilibrium","Redox Reactions","Electrochemistry","Chemical Kinetics","Surface Chemistry","Periodic Table & Periodicity","Hydrogen","s-Block Elements","p-Block Elements","d & f Block Elements","Coordination Compounds","Metallurgy","Qualitative Analysis","Basic Organic Concepts","Hydrocarbons","Haloalkanes & Haloarenes","Alcohols, Phenols & Ethers","Aldehydes, Ketones & Acids","Amines","Biomolecules & Polymers","Chemistry in Everyday Life"],
+  Maths: ["Sets, Relations & Functions","Complex Numbers","Quadratic Equations","Sequences & Series","Permutations & Combinations","Binomial Theorem","Matrices & Determinants","Trigonometry","Straight Lines","Circles","Conic Sections","3D Geometry","Vectors","Limits, Continuity & Differentiability","Differentiation","Application of Derivatives","Integration & Applications","Differential Equations","Probability","Statistics"]
+};
+const BOX_INTERVALS = [1,3,7,16,35]; // days
+
+const DAILY_TIPS = [
+  "Solve at least 20 previous-year JEE questions daily — pattern recognition beats last-minute cramming.",
+  "Revise formulas every morning for 15 minutes before starting new topics.",
+  "Attempt one full mock test under strict timing every week, not just chapter tests.",
+  "In Physics, always draw a free-body diagram before writing equations.",
+  "For Organic Chemistry, name reactions stick better when you write the mechanism yourself, not just read it.",
+  "In Maths, time-box each problem — if stuck beyond 3 minutes in a mock, mark and move on.",
+  "Keep an error log: note every silly mistake and review it weekly.",
+  "Sleep 7+ hours before a mock test day — fatigue costs more marks than an extra hour of revision.",
+  "Revise NCERT line-by-line for Chemistry — a large share of JEE Main questions are NCERT-based.",
+  "Practice mental math (squares, cubes, log tables) to save time in the exam."
+];
+
+function defaultState(){
+  const syllabus = {};
+  SUBJECTS.forEach(s=>{
+    syllabus[s] = CHAPTER_SEED[s].map((name,i)=>({id:s+'-'+i,name,status:'not-started',box:0,lastRevised:null,nextReview:null}));
+  });
+  return {
+    settings:{mainDate:'2029-01-20',advDate:'2029-05-25'},
+    syllabus, dailyTasks:[], mockTests:[], formulas:[], flashcards:[], shortNotes:[]
+  };
+}
+
+let state = load();
+function load(){
+  try{
+    const raw = localStorage.getItem('jeePrep2029');
+    if(!raw) return defaultState();
+    const parsed = JSON.parse(raw);
+    const d = defaultState();
+    return Object.assign(d, parsed, {syllabus: parsed.syllabus || d.syllabus});
+  }catch(e){ return defaultState(); }
+}
+function save(){
+  localStorage.setItem('jeePrep2029', JSON.stringify(state));
+}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+function uid(){ return Date.now()+'-'+Math.random().toString(36).slice(2,7); }
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function daysBetween(a,b){ return Math.ceil((new Date(b)-new Date(a))/86400000); }
+
+/* ============ NAV ============ */
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    renderAll();
+  });
+});
+
+/* ============ DASHBOARD ============ */
+function renderDailyTip(){
+  const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+  const tip = DAILY_TIPS[dayOfYear % DAILY_TIPS.length];
+  document.getElementById('dailyTipBox').innerHTML = `<h3>💡 Tip of the Day</h3><div style="font-size:14px;line-height:1.5;">${esc(tip)}</div>`;
+}
+function renderDashboard(){
+  renderDailyTip();
+  const totalChapters = SUBJECTS.reduce((a,s)=>a+state.syllabus[s].length,0);
+  const doneChapters = SUBJECTS.reduce((a,s)=>a+state.syllabus[s].filter(c=>c.status==='done').length,0);
+  const pct = totalChapters? Math.round(doneChapters/totalChapters*100):0;
+  const dMain = daysBetween(todayStr(), state.settings.mainDate);
+  const dAdv = daysBetween(todayStr(), state.settings.advDate);
+  const cardsDue = state.flashcards.filter(c=>!c.nextReview || c.nextReview<=todayStr()).length;
+  const tasksToday = state.dailyTasks.filter(t=>t.date===todayStr() && !t.done).length;
+
+  document.getElementById('headerCountdown').textContent =
+    `Main in ${dMain>=0?dMain:'—'}d · Advanced in ${dAdv>=0?dAdv:'—'}d`;
+
+  document.getElementById('dashCards').innerHTML = `
+    <div class="card"><h3>JEE Main 2029</h3><div class="big">${dMain>=0?dMain+' days':'Date passed'}</div><div class="small">${state.settings.mainDate}</div></div>
+    <div class="card"><h3>JEE Advanced 2029</h3><div class="big">${dAdv>=0?dAdv+' days':'Date passed'}</div><div class="small">${state.settings.advDate}</div></div>
+    <div class="card"><h3>Syllabus Complete</h3><div class="big">${pct}%</div><div class="progress-bar" style="margin-top:8px;"><div class="fill" style="width:${pct}%"></div></div></div>
+    <div class="card"><h3>Cards Due</h3><div class="big">${cardsDue}</div><div class="small">${tasksToday} task(s) pending today</div></div>
+  `;
+
+  const dueBox = document.getElementById('dueTodayBox');
+  const dueTasks = state.dailyTasks.filter(t=>t.date<=todayStr() && !t.done);
+  const dueChapters = SUBJECTS.flatMap(s=>state.syllabus[s].filter(c=>c.nextReview && c.nextReview<=todayStr()).map(c=>({...c,subject:s})));
+  if(dueTasks.length===0 && dueChapters.length===0 && cardsDue===0){
+    dueBox.innerHTML = '<div class="empty">Nothing due today — nice work! 🎉</div>';
+  } else {
+    let html = '';
+    dueTasks.forEach(t=>html+=`<div class="chapter-row due-today"><div class="name">📝 ${esc(t.text)} <span class="small" style="color:var(--muted)">(${t.date})</span></div></div>`);
+    dueChapters.forEach(c=>html+=`<div class="chapter-row due-today"><div class="name"><span class="subject-tag tag-${c.subject}">${c.subject}</span> Revise: ${esc(c.name)}</div></div>`);
+    if(cardsDue>0) html+=`<div class="chapter-row due-today"><div class="name">🗂 ${cardsDue} flashcard(s) due — check the Flashcards tab</div></div>`;
+    dueBox.innerHTML = html;
+  }
+
+  drawScoreChart('dashChart');
+}
+
+function drawScoreChart(canvasId){
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = canvas.clientWidth || 600;
+  const h = canvas.height = 140;
+  ctx.clearRect(0,0,w,h);
+  const tests = state.mockTests.slice(-15);
+  if(tests.length===0){
+    ctx.fillStyle = '#8b98a8'; ctx.font='13px sans-serif';
+    ctx.fillText('No mock tests logged yet.', 10, h/2);
+    return;
+  }
+  const pad = 30;
+  const pts = tests.map(t=> (t.physics+t.chem+t.maths)/t.max*100 );
+  const maxY = 100;
+  ctx.strokeStyle = '#2a3441'; ctx.beginPath();
+  for(let i=0;i<=4;i++){
+    const y = pad + (h-2*pad)*i/4;
+    ctx.moveTo(pad,y); ctx.lineTo(w-10,y);
+  }
+  ctx.stroke();
+  ctx.fillStyle='#8b98a8'; ctx.font='10px sans-serif';
+  for(let i=0;i<=4;i++){
+    const y = pad + (h-2*pad)*i/4;
+    ctx.fillText(Math.round(maxY - maxY*i/4)+'%', 2, y+3);
+  }
+  ctx.strokeStyle = '#4f8ff7'; ctx.lineWidth=2; ctx.beginPath();
+  pts.forEach((p,i)=>{
+    const x = pad + (w-pad-20)*(i/(Math.max(pts.length-1,1)));
+    const y = h - pad - (h-2*pad)*(p/maxY);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  ctx.fillStyle='#4f8ff7';
+  pts.forEach((p,i)=>{
+    const x = pad + (w-pad-20)*(i/(Math.max(pts.length-1,1)));
+    const y = h - pad - (h-2*pad)*(p/maxY);
+    ctx.beginPath(); ctx.arc(x,y,3,0,7); ctx.fill();
+  });
+}
+
+function esc(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ============ PLANNER ============ */
+function saveDates(){
+  state.settings.mainDate = document.getElementById('mainDate').value || state.settings.mainDate;
+  state.settings.advDate = document.getElementById('advDate').value || state.settings.advDate;
+  save(); toast('Target dates saved'); renderAll();
+}
+function addTask(){
+  const text = document.getElementById('taskText').value.trim();
+  const date = document.getElementById('taskDate').value || todayStr();
+  if(!text){ toast('Enter a task first'); return; }
+  state.dailyTasks.push({id:uid(),text,date,done:false});
+  document.getElementById('taskText').value='';
+  save(); renderPlanner();
+}
+function toggleTask(id){
+  const t = state.dailyTasks.find(x=>x.id===id);
+  t.done = !t.done; save(); renderPlanner();
+}
+function deleteTask(id){
+  state.dailyTasks = state.dailyTasks.filter(x=>x.id!==id);
+  save(); renderPlanner();
+}
+let activePlanSubject = 'Physics';
+function renderPlanNav(){
+  document.getElementById('planSubjectNav').innerHTML = SUBJECTS.map(s=>
+    `<button class="${s===activePlanSubject?'active':''}" onclick="setPlanSubject('${s}')">${s}</button>`).join('');
+}
+function setPlanSubject(s){ activePlanSubject = s; renderPlanner(); }
+function cycleStatus(s, id){
+  const order = ['not-started','in-progress','done'];
+  const ch = state.syllabus[s].find(c=>c.id===id);
+  const idx = order.indexOf(ch.status);
+  ch.status = order[(idx+1)%order.length];
+  save(); renderPlanner();
+}
+function markRevised(s, id, confident){
+  const ch = state.syllabus[s].find(c=>c.id===id);
+  ch.box = confident ? Math.min(ch.box+1, BOX_INTERVALS.length-1) : 0;
+  ch.lastRevised = todayStr();
+  const interval = BOX_INTERVALS[ch.box];
+  const next = new Date(); next.setDate(next.getDate()+interval);
+  ch.nextReview = next.toISOString().slice(0,10);
+  save(); renderPlanner(); toast('Next review: '+ch.nextReview);
+}
+function renderPlanner(){
+  document.getElementById('mainDate').value = state.settings.mainDate;
+  document.getElementById('advDate').value = state.settings.advDate;
+  renderPlanNav();
+
+  const taskBox = document.getElementById('taskList');
+  const sortedTasks = [...state.dailyTasks].sort((a,b)=>a.date.localeCompare(b.date));
+  taskBox.innerHTML = sortedTasks.length? sortedTasks.map(t=>`
+    <div class="chapter-row">
+      <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask('${t.id}')">
+      <div class="name" style="${t.done?'text-decoration:line-through;color:var(--muted)':''}">${esc(t.text)}</div>
+      <span class="small">${t.date}</span>
+      <button class="btn danger small" onclick="deleteTask('${t.id}')">✕</button>
+    </div>`).join('') : '<div class="empty">No tasks yet.</div>';
+
+  const chapters = state.syllabus[activePlanSubject];
+  document.getElementById('syllabusBox').innerHTML = chapters.map(c=>`
+    <div class="chapter-row">
+      <span class="status-pill ${c.status}" onclick="cycleStatus('${activePlanSubject}','${c.id}')">${c.status.replace('-',' ')}</span>
+      <div class="name">${esc(c.name)}</div>
+      <span class="box-badge">${c.nextReview? 'next: '+c.nextReview : (c.lastRevised? 'box '+(c.box+1):'')}</span>
+      <button class="btn secondary small" onclick="markRevised('${activePlanSubject}','${c.id}',true)" title="Revised confidently">✓ Got it</button>
+      <button class="btn secondary small" onclick="markRevised('${activePlanSubject}','${c.id}',false)" title="Needs more work">↺ Redo</button>
+    </div>`).join('');
+}
+
+/* ============ MOCK TESTS ============ */
+function addMockTest(){
+  const date = document.getElementById('mtDate').value || todayStr();
+  const type = document.getElementById('mtType').value;
+  const physics = parseFloat(document.getElementById('mtPhysics').value)||0;
+  const chem = parseFloat(document.getElementById('mtChem').value)||0;
+  const maths = parseFloat(document.getElementById('mtMaths').value)||0;
+  const max = parseFloat(document.getElementById('mtMax').value)||300;
+  state.mockTests.push({id:uid(),date,type,physics,chem,maths,max});
+  state.mockTests.sort((a,b)=>a.date.localeCompare(b.date));
+  ['mtPhysics','mtChem','mtMaths'].forEach(id=>document.getElementById(id).value='');
+  save(); renderMockTests(); renderDashboard(); toast('Test saved');
+}
+function deleteMockTest(id){
+  state.mockTests = state.mockTests.filter(t=>t.id!==id);
+  save(); renderMockTests(); renderDashboard();
+}
+function renderMockTests(){
+  const rows = [...state.mockTests].reverse().map(t=>{
+    const total = t.physics+t.chem+t.maths;
+    const pct = Math.round(total/t.max*100);
+    return `<tr>
+      <td>${t.date}</td><td>${t.type}</td><td>${t.physics}</td><td>${t.chem}</td><td>${t.maths}</td>
+      <td>${total}/${t.max}</td><td>${pct}%</td>
+      <td><button class="btn danger small" onclick="deleteMockTest('${t.id}')">✕</button></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('mockTable').innerHTML = rows || '<tr><td colspan="8" class="empty">No mock tests logged yet.</td></tr>';
+}
+
+/* ============ FORMULAS ============ */
+function showFormulaForm(){
+  const box = document.getElementById('formulaFormBox');
+  box.style.display='block';
+  box.innerHTML = `
+    <div class="row">
+      <div><select id="fSubject">${SUBJECTS.map(s=>`<option>${s}</option>`).join('')}</select></div>
+      <div><input type="text" id="fChapter" placeholder="Chapter"></div>
+      <div><input type="text" id="fTitle" placeholder="Title (e.g. Coulomb's Law)"></div>
+    </div>
+    <div style="margin-top:8px;"><textarea id="fFormula" placeholder="Formula text"></textarea></div>
+    <div style="margin-top:8px;"><textarea id="fNotes" placeholder="Notes (optional)"></textarea></div>
+    <div style="margin-top:8px;"><button class="btn" onclick="addFormula()">Save</button> <button class="btn secondary" onclick="document.getElementById('formulaFormBox').style.display='none'">Cancel</button></div>
+  `;
+}
+function addFormula(){
+  const subject = document.getElementById('fSubject').value;
+  const chapter = document.getElementById('fChapter').value.trim();
+  const title = document.getElementById('fTitle').value.trim();
+  const formula = document.getElementById('fFormula').value.trim();
+  const notes = document.getElementById('fNotes').value.trim();
+  if(!title || !formula){ toast('Title and formula required'); return; }
+  state.formulas.push({id:uid(),subject,chapter,title,formula,notes});
+  save(); document.getElementById('formulaFormBox').style.display='none';
+  renderFormulas(); toast('Formula added');
+}
+function deleteFormula(id){
+  state.formulas = state.formulas.filter(f=>f.id!==id);
+  save(); renderFormulas();
+}
+function renderFormulas(){
+  const q = (document.getElementById('formulaSearch').value||'').toLowerCase();
+  const list = state.formulas.filter(f=>
+    !q || f.title.toLowerCase().includes(q) || f.chapter.toLowerCase().includes(q) || f.subject.toLowerCase().includes(q) || f.formula.toLowerCase().includes(q)
+  );
+  document.getElementById('formulaList').innerHTML = list.length? list.map(f=>`
+    <div class="formula-item">
+      <span class="subject-tag tag-${f.subject}">${f.subject}</span> <b>${esc(f.title)}</b> <span class="small">· ${esc(f.chapter||'')}</span>
+      <button class="btn danger small" style="float:right" onclick="deleteFormula('${f.id}')">✕</button>
+      <div class="f">${esc(f.formula)}</div>
+      ${f.notes? `<div class="small">${esc(f.notes)}</div>`:''}
+    </div>
+  `).join('') : '<div class="empty">No formulas match. Try adding one!</div>';
+}
+
+/* ============ FLASHCARDS ============ */
+function showFlashForm(){
+  const box = document.getElementById('flashFormBox');
+  box.style.display='block';
+  box.innerHTML = `
+    <div class="row">
+      <div><select id="cSubject">${SUBJECTS.map(s=>`<option>${s}</option>`).join('')}</select></div>
+      <div><input type="text" id="cChapter" placeholder="Chapter"></div>
+    </div>
+    <div style="margin-top:8px;"><textarea id="cFront" placeholder="Front (question)"></textarea></div>
+    <div style="margin-top:8px;"><textarea id="cBack" placeholder="Back (answer)"></textarea></div>
+    <div style="margin-top:8px;"><button class="btn" onclick="addFlashcard()">Save</button> <button class="btn secondary" onclick="document.getElementById('flashFormBox').style.display='none'">Cancel</button></div>
+  `;
+}
+function addFlashcard(){
+  const subject = document.getElementById('cSubject').value;
+  const chapter = document.getElementById('cChapter').value.trim();
+  const front = document.getElementById('cFront').value.trim();
+  const back = document.getElementById('cBack').value.trim();
+  if(!front||!back){ toast('Front and back required'); return; }
+  state.flashcards.push({id:uid(),subject,chapter,front,back,box:0,nextReview:todayStr()});
+  save(); document.getElementById('flashFormBox').style.display='none';
+  renderFlashcards(); toast('Card added');
+}
+function deleteFlashcard(id){
+  state.flashcards = state.flashcards.filter(c=>c.id!==id);
+  save(); renderFlashcards();
+}
+let reviewQueue = [];
+let reviewIndex = 0;
+let showingBack = false;
+function startReview(){
+  reviewQueue = state.flashcards.filter(c=>!c.nextReview || c.nextReview<=todayStr());
+  reviewIndex = 0; showingBack = false;
+  renderReview();
+}
+function renderReview(){
+  const box = document.getElementById('reviewBox');
+  if(reviewQueue.length===0){
+    box.innerHTML = '';
+    return;
+  }
+  if(reviewIndex >= reviewQueue.length){
+    box.innerHTML = '<div class="card"><div class="empty">Review session complete! 🎉</div></div>';
+    return;
+  }
+  const c = reviewQueue[reviewIndex];
+  box.innerHTML = `
+    <div class="card">
+      <div class="small">${reviewIndex+1} / ${reviewQueue.length} · <span class="subject-tag tag-${c.subject}">${c.subject}</span> ${esc(c.chapter||'')}</div>
+      <div class="flashcard" onclick="flipCard()">${showingBack? esc(c.back) : esc(c.front)}</div>
+      ${showingBack? `<div class="flash-controls">
+          <button class="btn danger" onclick="gradeCard(false)">✗ Forgot</button>
+          <button class="btn" onclick="gradeCard(true)">✓ Remembered</button>
+        </div>` : `<div class="flash-controls"><button class="btn secondary" onclick="flipCard()">Show Answer</button></div>`}
+    </div>
+  `;
+}
+function flipCard(){ showingBack = !showingBack; renderReview(); }
+function gradeCard(remembered){
+  const c = reviewQueue[reviewIndex];
+  c.box = remembered ? Math.min(c.box+1, BOX_INTERVALS.length-1) : 0;
+  const interval = BOX_INTERVALS[c.box];
+  const next = new Date(); next.setDate(next.getDate()+interval);
+  c.nextReview = next.toISOString().slice(0,10);
+  save();
+  reviewIndex++; showingBack = false;
+  renderReview(); renderAllCards();
+}
+function renderAllCards(){
+  document.getElementById('allCardsList').innerHTML = state.flashcards.length? state.flashcards.map(c=>`
+    <div class="chapter-row">
+      <span class="subject-tag tag-${c.subject}">${c.subject}</span>
+      <div class="name">${esc(c.front)}</div>
+      <span class="box-badge">${c.nextReview<=todayStr()?'due':c.nextReview}</span>
+      <button class="btn danger small" onclick="deleteFlashcard('${c.id}')">✕</button>
+    </div>`).join('') : '<div class="empty">No flashcards yet.</div>';
+}
+function renderFlashcards(){ renderReview(); renderAllCards(); }
+
+/* ============ SHORT NOTES ============ */
+let activeNotesSubject = 'All';
+function renderNotesNav(){
+  const subs = ['All', ...SUBJECTS];
+  document.getElementById('notesSubjectNav').innerHTML = subs.map(s=>
+    `<button class="${s===activeNotesSubject?'active':''}" onclick="setNotesSubject('${s}')">${s}</button>`).join('');
+}
+function setNotesSubject(s){ activeNotesSubject = s; renderNotes(); }
+function showNoteForm(){
+  const box = document.getElementById('noteFormBox');
+  box.style.display='block';
+  box.innerHTML = `
+    <div class="row">
+      <div><select id="nSubject">${SUBJECTS.map(s=>`<option>${s}</option>`).join('')}</select></div>
+      <div><input type="text" id="nChapter" placeholder="Chapter"></div>
+      <div><input type="text" id="nSource" placeholder="Source (e.g. NCERT, Coaching, Self)"></div>
+    </div>
+    <div style="margin-top:8px;"><input type="text" id="nTitle" placeholder="Note title"></div>
+    <div style="margin-top:8px;"><textarea id="nContent" placeholder="Short note content"></textarea></div>
+    <div style="margin-top:8px;"><button class="btn" onclick="addNote()">Save</button> <button class="btn secondary" onclick="document.getElementById('noteFormBox').style.display='none'">Cancel</button></div>
+  `;
+}
+function addNote(){
+  const subject = document.getElementById('nSubject').value;
+  const chapter = document.getElementById('nChapter').value.trim();
+  const source = document.getElementById('nSource').value.trim() || 'Self';
+  const title = document.getElementById('nTitle').value.trim();
+  const content = document.getElementById('nContent').value.trim();
+  if(!title || !content){ toast('Title and content required'); return; }
+  state.shortNotes.push({id:uid(),subject,chapter,source,title,content});
+  save(); document.getElementById('noteFormBox').style.display='none';
+  renderNotes(); toast('Note added');
+}
+function deleteNote(id){
+  state.shortNotes = state.shortNotes.filter(n=>n.id!==id);
+  save(); renderNotes();
+}
+function renderNotes(){
+  renderNotesNav();
+  const q = (document.getElementById('noteSearch').value||'').toLowerCase();
+  let list = state.shortNotes;
+  if(activeNotesSubject !== 'All') list = list.filter(n=>n.subject===activeNotesSubject);
+  if(q) list = list.filter(n=>
+    n.title.toLowerCase().includes(q) || n.chapter.toLowerCase().includes(q) ||
+    n.content.toLowerCase().includes(q) || (n.source||'').toLowerCase().includes(q)
+  );
+  document.getElementById('notesList').innerHTML = list.length? list.map(n=>`
+    <div class="formula-item">
+      <span class="subject-tag tag-${n.subject}">${n.subject}</span> <b>${esc(n.title)}</b>
+      <span class="small">· ${esc(n.chapter||'')} · source: ${esc(n.source||'Self')}</span>
+      <button class="btn danger small" style="float:right" onclick="deleteNote('${n.id}')">✕</button>
+      <div style="margin-top:8px;font-size:13.5px;line-height:1.5;">${esc(n.content)}</div>
+    </div>
+  `).join('') : '<div class="empty">No short notes match. Try adding one!</div>';
+}
+
+/* ============ DATA MANAGEMENT ============ */
+function exportData(){
+  const blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'jee-prep-2029-backup-'+todayStr()+'.json';
+  a.click();
+  toast('Exported');
+}
+function importData(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const parsed = JSON.parse(e.target.result);
+      state = Object.assign(defaultState(), parsed);
+      save(); renderAll(); toast('Data imported');
+    }catch(err){ toast('Invalid file'); }
+  };
+  reader.readAsText(file);
+  evt.target.value='';
+}
+function resetAll(){
+  if(confirm('This will erase ALL data (planner, tests, formulas, flashcards, short notes). Export a backup first if unsure. Continue?')){
+    state = defaultState(); save(); renderAll(); toast('All data reset');
+  }
+}
+
+/* ============ INIT ============ */
+function renderAll(){
+  renderDashboard();
+  renderPlanner();
+  renderMockTests();
+  renderFormulas();
+  renderFlashcards();
+  renderNotes();
+}
+document.getElementById('taskDate').value = todayStr();
+document.getElementById('mtDate').value = todayStr();
+renderAll();
+window.addEventListener('resize', ()=>drawScoreChart('dashChart'));
+</script>
+</body>
+</html>
